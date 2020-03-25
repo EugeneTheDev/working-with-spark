@@ -2,8 +2,12 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.41'
 }
 
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
 group 'eugenethedev'
 version '1.0'
+mainClassName = "AppKt"
 
 repositories {
     mavenCentral()
@@ -21,6 +25,7 @@ dependencies {
     // Logger
     implementation 'org.slf4j:slf4j-simple:1.7.30'
 
+    // Postgres Driver
     implementation 'org.postgresql:postgresql:42.2.11'
 }
 
@@ -33,4 +38,16 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'AppKt'
+    }
+    // Add this
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
